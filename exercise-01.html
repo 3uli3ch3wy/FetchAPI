@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Fetch API Exercise Lab</title>
+</head>
+
+<body>
+  <div id="container">
+    <h1>The Fetch API Exercises</h1>
+    <p>Open the web inspector console to test.</p>
+
+    <!-- button added (optional)-->
+    <!-- <button id="load-photo" type="button" onclick="handleButton()">Load Dog Photo</button> -->
+  </div>
+</body>
+<script>
+  // Place your code below this line
+
+  // 5. Move the URL from inside the fetch() call to its own variable called url. 
+  //Then pass the url variable into the fetch() call.
+  var url = 'https://dog.ceo/api/breeds/image/random';
+
+  // // create button using jquery for q12
+  //var button = document.createElement('button').setAttribute('id', 'load-photo');
+ // const button = document.querySelector('#load-photo');
+  //var button = $('<button>Load Dog Photo</photo>').attr('id', 'load-photo');
+
+//create a button with id, innerText, and onclick function
+  const button = document.createElement('button');
+  button.id = 'load-photo';
+  button.innerText = 'Load Dog Photo';
+  button.onclick = init();
+  document.body.appendChild(button); // to add button inside the body html tag
+
+  // 1. Write out a basic Fetch API call to the URL https://dog.ceo/api/breeds/image/random using fetch().
+  fetch(url)
+    // 2. Add .then() to the fetch() call and convert the response to JSON.
+    .then((response) => response.json())
+    // 3. Add another .then() to log the data to the console.
+    // 6. Inside of the second .then() statement, after the console log of the data, 
+    // log out markup for an image like so: <img src=”${data.message}” alt=”Random photo of a dog” />
+    .then((data) => {
+      console.log(data);
+      console.log(`<img src="${data.message}" alt="Random photo of a dog" />`);
+
+      // // 7. Now instead of logging the image markup to the console, 
+      // //have the image of the random dog display on the page before the end of the container div.
+      // document.querySelector(`#container`).insertAdjacentHTML(
+      //   `beforeend`,
+      //   `<img src="${data.message}" alt="Random photo of a dog" />`
+      // )
+    })
+    // 4. Add a .catch() statement that displays any errors that may occur. 
+    //Change the domain name in the URL from dog.ceo to dog2.ceo. 
+    // This should cause an error message to display.
+    .catch((error) => console.error(error));
+
+  // 8. Create a function called getRandomDogPhoto() that returns a fetch request to the following URL: https://dog.ceo/api/breeds/image/random. 
+  // make sure the entire fetch request is being returned.
+  function getRandomDogPhoto() {
+    const webUrl = `https://dog.ceo/api/breeds/image/random`;
+    return fetch(webUrl)
+      .then((response) => response.json())
+      .catch((err) => console.error(err));
+
+  }
+
+  // async function allows program to pause and wait anywhere it finds the "await" keyword before a fetch call
+
+  // 9. Create an async function called init()(). 
+  // Inside of this function create a variable called data that 
+  // awaits getRandomDogPhoto() to return the data. After the data is returned, 
+  // log the value of the data to the console inside of init(). 
+  // Make sure to call init() to test.
+
+  async function init() {
+
+    const data = await getRandomDogPhoto();
+
+    console.log(data);
+
+
+    button.addEventListener('click', function handleButton() {
+
+      loadSpinner();
+
+      getRandomDogPhoto();
+
+      removeSpinner();
+
+      renderDogPhoto(data.message);
+
+      document.body.removeChild(button); // to remove button after clicking
+
+    });
+
+    // // put inside handleButton()
+    // loadSpinner();
+
+    // const data = await getRandomDogPhoto();
+    // console.log(data);
+
+
+    // getRandomDogPhoto();
+
+    // removeSpinner();
+
+    // renderDogPhoto(data.message);
+
+  }
+  // in console, call init();
+
+  //result is:
+  // Promise {<pending>}
+  // [[Prototype]]: Promise
+  // [[PromiseState]]: "fulfilled"
+  // [[PromiseResult]]: Object
+
+
+  // 10. Create a new function called renderDogPhoto(url) 
+  // that takes the URL for a dog photo and displays it 
+  // on the page before the end of the container div. 
+  // Call renderDogPhoto() inside of the init() function right after the getRandomDogPhoto() function. 
+  // Make sure to pass the correct value of the url to the dog photo into the renderDogPhoto() function 
+  // (i.e. `data.message` not just data). 
+  // If done correctly, a photo of a dog should display on the page.
+
+  function renderDogPhoto(url) {
+
+    document.querySelector(`#container`).insertAdjacentHTML(
+      `beforeend`,
+      `<img src="${url}" alt="Random photo of a dog" />`
+    );
+  }
+
+  // 11. Add two new functions (functions are provided) – loadSpinner() and removeSpinner(). 
+  // Call loadSpinner() before you await the dog photo in the init() function. 
+  // Then call removeSpinner() after you have received the data 
+  // and before you display the dog photo. 
+  // If done correctly, you should see a spinner load while waiting for the dog photo to load.
+
+  function loadSpinner() {
+    const spinner = `../assets/loader.svg`;
+    const img = `<img src="${spinner}" id="spinner" alt="Loading spinner image" />`;
+    button.disabled = true;
+    button.insertAdjacentHTML(`afterbegin`, img);
+    document.querySelector(`#container`).insertAdjacentHTML(`beforeend`, img);
+  }
+
+  function removeSpinner() {
+    const spinner = document.querySelector(`img#spinner`);
+    spinner.parentElement.removeChild(spinner);
+  }
+
+
+
+// 12. Before the init() function, select the button with an ID of load-photo and assign it to a variable of
+// button. Then, inside of the init() function, attach the handleButton function as an event listener to the
+// button. Next, inside of the loadSpinner() function, set the button to disabled button.disabled = true.
+// Finally, load the img variable inside of the button before the text button.insertAdjacentHTML(
+// `afterbegin`, img ). This will cause the loading animation to appear inside of the button. Test the
+// animation. When you click on the button, it should become disabled and display the loading animation
+// inside the button. Then the button should disappear once the image loads. This may happen too fast to
+// see but it works if you pay attention.
+
+</script>
+
+</html>
